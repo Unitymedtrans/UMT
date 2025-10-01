@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Unity Medical Transportation — 24/7 Medical Transport in New Jersey</title>
+<meta content="Fast, safe, and reliable 24/7 ambulance, wheelchair, and stretcher transport across New Jersey. Call or book online in seconds." name="description"/>
+<meta content="#003a8c" name="theme-color"/>
+<meta content="Unity Medical Transportation — 24/7 Transport" property="og:title"/>
+<meta content="Compassionate care. Reliable transport. Always on time." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="updated_logo_transparent-removebg-preview.png" property="og:image"/>
+<!-- PWA -->
+<link href="manifest.webmanifest" rel="manifest"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link as="font" crossorigin="" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fv.ttf" rel="preload" type="font/ttf"/>
+<!-- Leaflet for interactive coverage map -->
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
+<script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    :root{
+      --blue:#003a8c; --blue-600:#004aa8; --green:#00c853;
+      --ink:#111827; --muted:#6b7280; --bg:#f7f9fc;
+      --card:#ffffff; --border:#e5e7eb; --success:#16a34a;
+      --shadow:0 8px 28px rgba(0,0,0,.08);
+      --s-2:4px; --s-3:8px; --s-4:12px; --s-5:16px; --s-6:24px; --s-7:32px; --s-8:48px; --s-9:64px;
+      --r:14px; --r-pill:999px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#0b1220; --card:#0f172a; --ink:#e6edf6; --muted:#93a4c0; --border:#20304b; --shadow:0 8px 28px rgba(0,0,0,.45) }
+      header{background:linear-gradient(0deg, rgba(0,0,0,.25), rgba(0,0,0,.25)), var(--blue)}
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .container{max-width:1140px;margin:0 auto;padding:0 20px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .section{padding-block:clamp(56px,7vw,96px)}
+    .section h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.02em;margin:0 0 6px;color:var(--blue)}
+    .section p.lead{color:var(--muted);margin:0 0 24px}
+
+    header{position:sticky;top:0;z-index:60;background:var(--blue);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.08);backdrop-filter:saturate(140%) blur(2px);transition:padding .2s ease, background .2s ease}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;transition:padding .2s ease}
+    header.scrolled .nav{padding:8px 0}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{height:46px;transition:transform .2s ease}
+    header.scrolled .logo{transform:scale(.92)}
+    .brand-title{font-weight:800;letter-spacing:-.01em}
+    .links{display:flex;gap:18px;align-items:center}
+    .links a{color:#fff;font-weight:700;opacity:.95;position:relative}
+    .links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:3px;background:var(--green);border-radius:3px}
+    .cta-nav{background:var(--green);color:#0b2a14;padding:10px 14px;border-radius:12px;font-weight:800;transition:.15s}
+    .cta-nav:hover{transform:translateY(-2px);filter:brightness(1.05)}
+    .cta-quote{border:2px solid #fff;color:#fff;padding:8px 12px;border-radius:12px;font-weight:700}
+
+    /* Hero with responsive images */
+    .hero{position:relative;color:#fff;background:
+      radial-gradient(80% 60% at 70% 20%, rgba(0,200,83,.25), rgba(0,0,0,0) 60%),
+      linear-gradient( to bottom, rgba(0,0,0,.35), rgba(0,0,0,.7) ),
+      url('./assets/ChatGPT Image Sep 22, 2025, 03_25_32 PM.png');
+      background-size: cover; background-position: 50% center; background-repeat:no-repeat}
+    .hero .inner{padding:clamp(64px,8vw,120px) 0}
+    .hero h1{font-size:clamp(28px,5vw,48px);line-height:1.1;margin:0 0 10px;text-shadow:0 2px 6px rgba(0,0,0,.6);letter-spacing:-.02em}
+    .hero h1 .accent{color:var(--green)}
+    .hero p{font-size:clamp(14px,2.6vw,18px);color:#e5e7eb;max-width:760px;margin:0}
+    .tagline{margin-top:8px;font-size:clamp(13px,2.2vw,16px);color:#cfe4ff}
+    .ctas{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:12px 16px;border-radius:12px;font-weight:800;transform:translateZ(0)}
+    .btn.primary{background:var(--green);color:#0b2a14;transition:transform .15s, filter .15s, box-shadow .15s}
+    .btn.primary:hover{filter:brightness(1.05);transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,200,83,.25)}
+    .btn.outline{border:2px solid #fff;color:#fff}
+    .hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .stat{backdrop-filter:blur(6px);background:linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.25);border-radius:12px;color:#fff;padding:8px 12px;font-weight:700}
+    /* responsive image support (decorative) */
+    @media (max-width: 1024px){ .hero{ background-image: radial-gradient(80% 60% at 70% 20%, rgba(0,200,83,.25), rgba(0,0,0,0) 60%), linear-gradient( to bottom, rgba(0,0,0,.35), rgba(0,0,0,.7) ), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAALQCAIAAABAH0oBAAAQpklEQVR4nO3XQRHAIADAMJgsNCIaF+OOJgr67RxrDwAAAHjddzsAAAAA/mCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQMIBR2MGZkPSScQAAAAASUVORK5CYII='); } }
+    @media (max-width: 640px){ .hero{ background-image: radial-gradient(80% 60% at 70% 20%, rgba(0,200,83,.25), rgba(0,0,0,0) 60%), linear-gradient( to bottom, rgba(0,0,0,.35), rgba(0,0,0,.7) ), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAALQCAIAAABAH0oBAAAQpklEQVR4nO3XQRHAIADAMJgsNCIaF+OOJgr67RxrDwAAAHjddzsAAAAA/mCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQIIBBgAAIMEAAwAAkGCAAQAASDDAAAAAJBhgAAAAEgwwAAAACQYYAACABAMMAABAggEGAAAgwQADAACQYIABAABIMMAAAAAkGGAAAAASDDAAAAAJBhgAAIAEAwwAAECCAQYAACDBAAMAAJBggAEAAEgwwAAAACQYYAAAABIMMAAAAAkGGAAAgAQDDAAAQMIBR2MGZkPSScQAAAAASUVORK5CYII='); } }
+
+    .logos{display:flex;gap:24px;align-items:center;flex-wrap:wrap;filter:grayscale(100%);opacity:.85}
+    .logo-box{width:120px;height:40px;background:#fff;border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;color:#6b7280}
+    @media (prefers-color-scheme: dark){ .logo-box{background:#0b1426} }
+
+    .trust{background:#fff;border-bottom:1px solid var(--border)}
+    @media (prefers-color-scheme: dark){ .trust{background:#0f172a} }
+    .trust .row{display:flex;gap:10px;padding:12px 0;flex-wrap:wrap;justify-content:space-between;color:var(--muted);font-size:14px}
+
+    .segments{display:inline-flex;border:1px solid var(--border);border-radius:var(--r-pill);overflow:hidden;background:#fff}
+    @media (prefers-color-scheme: dark){ .segments{background:#0f172a} }
+    .seg{padding:10px 14px;font-weight:800;color:var(--blue);cursor:pointer}
+    .seg[aria-selected="true"]{background:var(--blue);color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+    @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.04);transition:transform .2s, box-shadow .2s}
+    .card:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.08)}
+    .card h3{margin:8px 0 6px;font-size:18px}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+    .included{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .chip{border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-weight:700;color:#1f2937;background:#fff}
+    @media (prefers-color-scheme: dark){ .chip{background:#0f172a} }
+
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:var(--s-7)}
+    @media (max-width:900px){.steps{grid-template-columns:1fr}}
+    .step-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+
+    .carousel{display:flex;gap:14px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:8px}
+    .slide{min-width:300px;flex:0 0 auto;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;scroll-snap-align:start;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+    .stars{color:var(--green);letter-spacing:2px;font-weight:900}
+    .person{display:flex;align-items:center;gap:10px;margin-top:10px}
+    .avatar{width:36px;height:36px;border-radius:50%;border:2px solid #d1fae5;background:#d1fae5}
+    .meta{color:var(--muted);font-size:13px}
+
+    .coverage-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    @media (max-width:900px){.coverage-grid{grid-template-columns:1fr}}
+    .coverage-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+    .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .badge{background:#eefdf4;border:1px solid #bdf3d2;color:#065f46;border-radius:var(--r-pill);padding:6px 10px;font-weight:700}
+
+    .map-wrap{position:relative}
+    #coverage-map{width:100%;height:460px;border-radius:12px;border:1px solid var(--border);box-shadow:0 4px 14px rgba(0,0,0,.06)}
+    #pickup-map{width:100%;height:460px;border-radius:12px;border:1px solid var(--border);box-shadow:0 4px 14px rgba(0,0,0,.06)}
+    .legend{position:absolute;bottom:10px;left:10px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12px;box-shadow:var(--shadow)}
+    .legend div{display:flex;align-items:center;gap:8px;margin:4px 0}
+    .swatch{width:14px;height:14px;border-radius:4px;border:1px solid #cbd5e1}
+
+    .contact-wrap{background:#f3f4f6;border:2px solid #d1d5db;border-radius:var(--r);padding:18px;display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+    @media (max-width:900px){.contact-wrap{grid-template-columns:1fr}}
+    form{display:grid;gap:12px}
+    input,textarea,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font:inherit;background:#fff}
+    @media (prefers-color-scheme: dark){ input,textarea,select{background:#0f172a;color:var(--ink)} }
+    textarea{min-height:120px;resize:vertical}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:640px){.form-row{grid-template-columns:1fr}}
+    .wizard-steps{display:flex;gap:8px;margin-bottom:4px}
+    .step{flex:1;height:6px;border-radius:var(--r-pill);background:#e5e7eb;position:relative;overflow:hidden}
+    .step.active::after{content:"";position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--green)}
+    .wizard-nav{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+    .btn.secondary{background:#fff;border:1px solid var(--border);color:#0b2a14;font-weight:800}
+    .submit{background:var(--green);color:#0b2a14;border:0;padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer}
+    .hipaa{font-size:12px;color:var(--muted)}
+
+    .cta-band{background:linear-gradient(90deg, rgba(0,58,140,.9), rgba(0,58,140,.75));color:#fff;padding:18px 0}
+    .cta-band .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+    footer{background:#000;color:#cfe4ff;padding:26px 0;font-size:14px;margin-top:28px}
+    .foot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    footer a{color:#fff}
+    .social{display:flex;gap:12px}
+
+    .sticky-bar{z-index:100; position:fixed;bottom:0;left:0;right:0;background:#003a8c;color:#fff;display:flex;justify-content:space-around;align-items:center;padding:10px;z-index:80}
+    .sticky-bar a{color:#fff;font-weight:700;text-decoration:none;padding:10px 14px;border-radius:8px}
+    .sticky-bar a.call{background:#00c853;color:#0b2a14}
+    .sticky-bar a.book{border:2px solid #fff}
+
+    @media (max-width: 640px){
+      .hero{ background-position: 55% center; }
+      .hero .inner{ padding:72px 0 64px; }
+      .links{display:none}
+      .slide{min-width:80%}
+    }
+  
+    /* hide on small screens for readability */
+
+  @media (max-width: 1024px){ .hero{ background-image: radial-gradient(80% 60% at 70% 20%, rgba(0,200,83,.25), rgba(0,0,0,0) 60%), linear-gradient( to bottom, rgba(0,0,0,.35), rgba(0,0,0,.7) ), url('./assets/ChatGPT Image Sep 22, 2025, 03_25_32 PM.png'); } }
+@media (max-width: 640px){ .hero{ background-image: radial-gradient(80% 60% at 70% 20%, rgba(0,200,83,.25), rgba(0,0,0,0) 60%), linear-gradient( to bottom, rgba(0,0,0,.35), rgba(0,0,0,.7) ), url('./assets/ChatGPT Image Sep 22, 2025, 03_25_32 PM.png'); } }
+
+/* --- Fix: prevent Leaflet maps from clipping over the footer --- */
+.map-wrap, #coverage-map, #pickup-map { position: relative; }
+.map-wrap { overflow: hidden; }
+.leaflet-container { z-index: 0 !important; }        /* keep maps beneath standard content */
+footer { position: relative; z-index: 5; }           /* ensure footer sits above maps */
+
+
+/* --- Contact Broadcast band --- */
+.contact-broadcast{
+  background: linear-gradient(90deg, rgba(0,58,140,.95), rgba(0,58,140,.80));
+  color:#fff;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.15);
+}
+.cb-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  align-items: stretch;
+}
+.cb-card{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  gap:4px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:10px;
+  padding:8px;
+  text-decoration:none;
+  color:#fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,.06);
+  transition: transform .15s ease, background .15s ease;
+}
+.cb-card:hover{ transform: translateY(-2px); background: rgba(255,255,255,.12); }
+.cb-ico{ font-size: 1.1rem; line-height:1; }
+.cb-label{ font-weight: 800; font-size:0.8rem; opacity:.95; }
+.cb-value{ font-weight:700; font-size:0.9rem; }
+@media (max-width: 900px){ .cb-grid{ grid-template-columns: repeat(2, 1fr);} }
+@media (max-width: 520px){ .cb-grid{ grid-template-columns: 1fr; } }
+
+
+
+/* Full-bleed contact band */
+.contact-broadcast{
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+}
+.contact-broadcast .container{
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin: 0 auto;
+}
+
+
+/* Flush with hero */
+.contact-broadcast{
+  margin-top: -1px;            /* remove any thin seam */
+  padding-top: 8px;            /* tighter vertical rhythm */
+  padding-bottom: 8px;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+}
+/* If the hero has a bottom margin/padding, neutralize it when followed by the contact band */
+.hero + .contact-broadcast,
+.hero-section + .contact-broadcast,
+.hero-wrap + .contact-broadcast,
+section[id*="hero"] + .contact-broadcast {
+  margin-top: -1px !important;
+}
+/* Ensure full-bleed container stays aligned */
+.contact-broadcast .container{
+  padding-left: 16px;
+  padding-right: 16px;
+  margin: 0 auto;
+}
+
+
+/* Remove white filler / boxes inside contact band */
+.contact-broadcast .cb-card{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+/* Reduce grid gap a bit so items sit closer without white gutters showing */
+.contact-broadcast .cb-grid{
+  gap: 6px !important;
+}
+/* Keep text crisp and high-contrast on the gradient */
+.contact-broadcast .cb-label,
+.contact-broadcast .cb-value{ color: #fff !important; }
+/* Ensure no stray white background on the band itself */
+.contact-broadcast{
+  background: linear-gradient(90deg, rgba(0,58,140,1), rgba(0,58,140,0.9)) !important;
+}
+
+
+/* === Status bar layout & polish === */
+
+/* Desktop: inline row with separators */
+@media (min-width: 960px){
+  .contact-broadcast .cb-grid{
+    grid-template-columns: 1fr;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+  .contact-broadcast .cb-card{
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0 !important;
+  }
+  .contact-broadcast .cb-card + .cb-card{
+    position: relative;
+  }
+  .contact-broadcast .cb-card + .cb-card::before{
+    content:"";
+    display:block;
+    width:1px;height:18px;
+    background: rgba(255,255,255,.25);
+    margin-right: 12px;
+  }
+  .contact-broadcast .cb-ico{ font-size: 1rem; }
+  .contact-broadcast .cb-label{ font-weight:700; font-size:.8rem; opacity:.9; }
+  .contact-broadcast .cb-value{ font-size:.95rem; font-weight:700; }
+}
+
+/* Mobile CTA emphasis for Call Now */
+@media (max-width: 520px){
+  .contact-broadcast .cb-grid{ gap:10px !important; }
+  .contact-broadcast .cb-card.call-now{
+    background: rgba(255,255,255,.12) !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+  }
+}
+
+/* Legibility pop over hero */
+.contact-broadcast .cb-label, 
+.contact-broadcast .cb-value{
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+
+/* Hover & focus states */
+.contact-broadcast a.cb-card{
+  outline: none;
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+.contact-broadcast a.cb-card:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+.contact-broadcast a.cb-card:focus-visible{
+  box-shadow: 0 0 0 3px rgba(255,255,255,.35);
+  border-radius: 8px;
+}
+
+/* Seamless gradient continuation from hero */
+.contact-broadcast{
+  background: linear-gradient(180deg, rgba(0,58,140,0) 0%, rgba(0,58,140,.92) 18%, rgba(0,58,140,.95) 100%) !important;
+}
+</style>
+<style>
+/* === GitHub Pages safe image rules === */
+.img-fluid{max-width:100%;height:auto;display:block}
+
+/* Prevent hero distortion; prefer background cover */
+.hero{background-position:center;background-size:cover;background-repeat:no-repeat}
+.header-logo img,.logo img{max-height:64px;height:auto;width:auto}
+
+/* Utility fits */
+.fit-cover{width:100%;height:100%;object-fit:cover}
+.fit-contain{width:100%;height:auto;object-fit:contain}
+
+/* Contact status bar stays crisp */
+.contact-broadcast .cb-label,.contact-broadcast .cb-value{ text-shadow:0 1px 2px rgba(0,0,0,.35) }
+</style></head>
+<body>
+<header id="top" role="banner">
+<div aria-label="Main" class="container nav" role="navigation">
+<div class="brand">
+<img alt="Unity Medical Transportation logo" class="logo img-fluid" loading="lazy" src="./assets/updated_logo_transparent-removebg-preview.png"/>
+<div class="brand-title">Unity Medical Transportation</div>
+</div>
+<nav class="links" id="site-nav">
+<a href="#services">Services</a>
+<a href="#how">How it works</a>
+<a href="#testimonials">Testimonials</a>
+<a href="#coverage">Coverage</a>
+<a href="#contact">Contact</a>
+<a aria-label="Get a quote" class="cta-quote" href="#contact">Get a Quote</a>
+<a aria-label="Call Unity Medical 24/7" class="cta-nav" href="tel:+1-555-123-4567">📞 Call 24/7</a>
+</nav>
+</div>
+</header>
+<!-- Quick Contact Broadcast -->
+<!-- Hero -->
+<section aria-label="Hero" class="hero" id="hero" role="region">
+<div class="container inner">
+<h1>Fast, Safe, and Reliable <span class="accent">24/7</span> Medical Transportation</h1>
+<p>Ambulance, wheelchair, and stretcher services for dialysis centers, nursing homes, and private clients across New Jersey.</p>
+<div class="tagline">Compassionate care. Reliable transport. Always on time.</div>
+<div class="ctas">
+<a class="btn primary" href="tel:+1-555-123-4567">Call Dispatch Now</a>
+<a class="btn outline" href="#contact">Book Online</a>
+</div>
+<div class="hero-stats">
+<div class="stat">⭐ 4.9/5 rating</div>
+<div class="stat">Trusted by 12+ NJ facilities</div>
+<div class="stat">Avg. pickup variance ±6 min</div></div>
+</div></section>
+<div aria-label="Trust badges" class="trust" role="region">
+<div class="container row">
+<section aria-labelledby="contact-info-title" class="contact-broadcast" id="contact-info">
+<div class="container cb-grid">
+<h2 class="sr-only" id="contact-info-title">Contact Information</h2>
+<a aria-label="Call Unity Medical Transportation" class="cb-card call-now" href="tel:+19085848336">
+<div aria-hidden="true" class="cb-ico">📞</div>
+<div class="cb-label">Phone</div>
+<div class="cb-value">(908) 584-8336</div>
+</a>
+<div aria-label="Fax number" class="cb-card" role="group">
+<div aria-hidden="true" class="cb-ico">📠</div>
+<div class="cb-label">Fax</div>
+<div class="cb-value">(973) 925-6260</div>
+</div>
+<a aria-label="Email Unity Medical Transportation" class="cb-card" href="mailto:Contact@unitymt.com">
+<div aria-hidden="true" class="cb-ico">✉️</div>
+<div class="cb-label">Email</div>
+<div class="cb-value">Contact@unitymt.com</div>
+</a>
+<a aria-label="Visit unitymt.com" class="cb-card" href="https://www.unitymt.com" rel="noopener" target="_blank">
+<div aria-hidden="true" class="cb-ico">🌐</div>
+<div class="cb-label">Website</div>
+<div class="cb-value">unitymt.com</div>
+</a>
+</div>
+</section>
+<div class="badge-row">
+<span class="badge">24/7</span>
+<span class="badge">Door-through-door</span>
+<span class="badge">Facility Hand-offs</span>
+<span class="badge">HIPAA-minded</span>
+</div>
+</div>
+</div>
+<!-- Services -->
+<section aria-labelledby="services-title" class="section" id="services">
+<div class="container">
+<h2 id="services-title">Our Services</h2>
+<p class="lead">Comprehensive non-emergency medical transportation with trained staff and modern equipment.</p>
+<div aria-label="Service categories" class="segments" role="tablist">
+<button aria-selected="true" class="seg" data-seg="all" role="tab">All</button>
+<button aria-selected="false" class="seg" data-seg="bls" role="tab">Ambulance (BLS)</button>
+<button aria-selected="false" class="seg" data-seg="wheel" role="tab">Wheelchair</button>
+<button aria-selected="false" class="seg" data-seg="dialysis" role="tab">Dialysis &amp; Facilities</button>
+</div>
+<div class="grid" id="service-grid">
+<div class="card" data-tags="bls all">
+<div style="display:flex;gap:10px;align-items:center">
+<svg aria-hidden="true" fill="none" height="28" viewbox="0 0 24 24" width="28"><path d="M3 13h18l-2-5h-5l-2-3H7L3 13Z" stroke="currentColor" stroke-width="1.6"></path><circle cx="7" cy="17" r="2.5" stroke="currentColor" stroke-width="1.6"></circle><circle cx="17" cy="17" r="2.5" stroke="currentColor" stroke-width="1.6"></circle></svg>
+<h3>Ambulance (BLS)</h3>
+</div>
+<p>Two-EMT crews, stretcher transport, and facility-to-facility transfers.</p>
+<div class="included">
+<span class="chip">Two EMTs</span><span class="chip">Stair chair</span><span class="chip">Hand-off notes</span>
+</div>
+<details>
+<summary>What’s included</summary>
+<p>Vitals monitoring, safe loading/unloading, and direct hand-offs with clinical teams.</p>
+</details>
+</div>
+<div class="card" data-tags="wheel all">
+<div style="display:flex;gap:10px;align-items:center">
+<svg aria-hidden="true" fill="none" height="28" viewbox="0 0 24 24" width="28"><path d="M4 12h16M6 16h12M8 8h8" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"></path></svg>
+<h3>Wheelchair Van</h3>
+</div>
+<p>Secure wheelchair transport with ramps and tie-downs for safety and comfort.</p>
+<div class="included">
+<span class="chip">Tie-downs</span><span class="chip">Ramp assist</span><span class="chip">Door-through-door</span>
+</div>
+<details>
+<summary>What’s included</summary>
+<p>Door-through-door assistance and appointment coordination to minimize wait times.</p>
+</details>
+</div>
+<div class="card" data-tags="dialysis all">
+<div style="display:flex;gap:10px;align-items:center">
+<svg aria-hidden="true" fill="none" height="28" viewbox="0 0 24 24" width="28"><path d="M5 12h14M5 16h9M5 8h6" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"></path></svg>
+<h3>Dialysis &amp; Nursing Home</h3>
+</div>
+<p>Reliable recurring transports with on-time performance for facility schedules.</p>
+<div class="included">
+<span class="chip">Standing orders</span><span class="chip">Recurring bookings</span><span class="chip">Proactive ETAs</span>
+</div>
+<details>
+<summary>What’s included</summary>
+<p>Standing orders, recurring bookings, and proactive communication if schedules change.</p>
+</details>
+</div>
+</div>
+<div class="steps" id="how">
+<div class="step-card">
+<strong>1. Choose your service</strong>
+<p class="lead">BLS ambulance, wheelchair, or recurring dialysis transport.</p>
+</div>
+<div class="step-card">
+<strong>2. Confirm time &amp; details</strong>
+<p class="lead">We coordinate with facilities and send live ETAs.</p>
+</div>
+<div class="step-card">
+<strong>3. Ride with updates</strong>
+<p class="lead">Door-through-door assistance and smooth hand‑offs.</p>
+</div>
+</div>
+<div style="text-align:center;margin-top:18px">
+<a class="btn primary" href="#contact">Get a Quote</a></div>
+</div></section>
+<!-- Testimonials -->
+<section aria-labelledby="testimonials-title" class="section" id="testimonials">
+<div class="container">
+<h2 id="testimonials-title">What Clients Say</h2>
+<p class="lead">Real feedback from facilities and families who rely on us.</p>
+<div aria-label="Client testimonials" class="carousel">
+<div class="slide">
+<div aria-label="5 out of 5 stars" class="stars">★★★★★</div>
+          “Professional crews, safe transfers, and zero missed appointments.”
+          <div class="person">
+<div aria-hidden="true" class="avatar"></div>
+<div>
+<div class="meta">Michael R.</div>
+<div class="meta">Nursing Home Director • Newark, NJ</div>
+</div>
+</div>
+</div>
+<div class="slide">
+<div aria-label="5 out of 5 stars" class="stars">★★★★★</div>
+          “They treated my father with compassion. Booking was fast and easy.”
+          <div class="person">
+<div aria-hidden="true" class="avatar"></div>
+<div>
+<div class="meta">Lisa P.</div>
+<div class="meta">Family Member • Woodbridge, NJ</div>
+</div>
+</div>
+</div>
+<div class="slide">
+<div aria-label="5 out of 5 stars" class="stars">★★★★★</div>
+          “Clean vehicles, courteous EMTs, and punctual pickups every week.”
+          <div class="person">
+<div aria-hidden="true" class="avatar"></div>
+<div>
+<div class="meta">D. Shah</div>
+<div class="meta">Outpatient Dialysis</div>
+</div>
+</div>
+</div>
+<div class="slide">
+<div aria-label="5 out of 5 stars" class="stars">★★★★★</div>
+          “Dispatch kept us updated with ETAs. Smooth hand‑offs to our staff.”
+          <div class="person">
+<div aria-hidden="true" class="avatar"></div>
+<div>
+<div class="meta">R. Alvarez</div>
+<div class="meta">Rehab Facility • Jersey City, NJ</div>
+</div>
+</div>
+</div></div>
+</div></section>
+<div class="wave-divider"></div>
+<!-- Coverage (Leaflet counties + pins) -->
+<section aria-labelledby="coverage-title" class="section" id="coverage">
+<div class="container">
+<h2 id="coverage-title">Coverage Area</h2>
+<p class="lead">Exact county coverage highlighted below. Primary focus in North &amp; Central NJ; extended trips by request.</p>
+<div class="coverage-grid">
+<div class="coverage-card">
+<h3>Primary Counties</h3>
+<ul style="margin:6px 0 0 18px;line-height:1.8">
+<li>Essex • Hudson • Union • Bergen</li>
+<li>Passaic • Morris • Middlesex • Somerset</li>
+<li>Monmouth • Ocean • Hunterdon</li>
+</ul>
+<div class="badge-row">
+<span class="badge">Recurring dialysis</span>
+<span class="badge">Facility hand-offs</span>
+<span class="badge">Long-distance by request</span>
+</div>
+</div>
+<div class="coverage-card map-wrap">
+<div aria-label="Map with county highlights and pins" id="coverage-map" role="img"></div>
+<div aria-hidden="true" class="legend">
+<div><span class="swatch" style="background:rgba(0,58,140,.20)"></span> Primary counties</div>
+<div><span class="swatch" style="background:rgba(0,200,83,.20)"></span> Extended area</div>
+</div>
+</div></div>
+</div></section>
+<!-- Contact / Multi-step Wizard with scheduler -->
+<section aria-labelledby="contact-title" class="section" id="contact">
+<div class="container contact-wrap">
+<div>
+<h2 id="contact-title">Request a Pickup</h2>
+<div aria-hidden="true" class="wizard-steps">
+<div class="step" id="stepbar-1"></div>
+<div class="step" id="stepbar-2"></div>
+<div class="step" id="stepbar-3"></div>
+</div>
+<form action="https://formspree.io/f/your-id" aria-describedby="hipaa-note" id="quote-form" method="POST" novalidate="">
+<!-- Step 1: Contact -->
+<div class="wizard" data-step="1">
+<div class="form-row">
+<input aria-label="Your Full Name" name="requester_name" placeholder="Your Full Name" required="" type="text"/>
+<input aria-label="Phone Number" name="phone" placeholder="Phone Number" required="" type="tel"/>
+</div>
+<div class="form-row">
+<input aria-label="Email" name="email" placeholder="Email (optional)" type="email"/>
+<select aria-label="Preferred contact method" name="contact_pref">
+<option value="">Preferred contact method</option>
+<option>Phone</option>
+<option>Text</option>
+<option>Email</option>
+</select>
+</div>
+<div class="form-row">
+<input aria-label="Facility or Organization" name="facility" placeholder="Facility/Organization (optional)" type="text"/>
+<input aria-label="Patient Name" name="patient_name" placeholder="Patient Name" type="text"/>
+</div>
+<div class="form-row">
+<select aria-label="Call me back in" name="callback_in">
+<option value="">Call me back in…</option>
+<option>15 minutes</option>
+<option>30 minutes</option>
+<option>60 minutes</option>
+</select>
+<input aria-label="Best time to reach you" name="best_time" placeholder="Best time to reach you (e.g., after 3pm)" type="text"/>
+</div>
+</div>
+<!-- Step 2: Trip details -->
+<div class="wizard" data-step="2" hidden="">
+<div class="form-row">
+<input aria-label="Pickup Address" name="pickup" placeholder="Pickup Address" required="" type="text"/>
+<input aria-label="Destination" name="destination" placeholder="Destination" required="" type="text"/>
+</div>
+<div class="form-row">
+<input aria-label="Date and Time" name="datetime" required="" type="datetime-local"/>
+<select aria-label="Service Type" name="service">
+<option value="bls">Ambulance (BLS)</option>
+<option value="wheelchair">Wheelchair</option>
+<option value="stretcher">Stretcher</option>
+</select>
+</div>
+<div class="form-row">
+<select aria-label="Mobility needs" name="mobility">
+<option value="">Mobility needs</option>
+<option>Independent</option>
+<option>Wheelchair</option>
+<option>Stretcher</option>
+</select>
+<select aria-label="Equipment needs" name="equipment">
+<option value="">Equipment (optional)</option>
+<option>Oxygen</option>
+<option>Suction</option>
+<option>Cardiac monitor</option>
+</select>
+</div>
+<div class="form-row">
+<select aria-label="Stairs present" name="stairs">
+<option value="">Stairs at pickup/destination?</option>
+<option>No stairs</option>
+<option>1–5 steps</option>
+<option>Flight of stairs</option>
+</select>
+<select aria-label="Return trip needed" name="return">
+<option value="">Return trip?</option>
+<option>No return</option>
+<option>Yes — same day</option>
+<option>Yes — later date</option>
+</select>
+</div>
+</div>
+<!-- Step 3: Notes & payment -->
+<div class="wizard" data-step="3" hidden="">
+<div class="form-row">
+<select aria-label="Payer method" name="payer">
+<option value="">Payer method</option>
+<option>Private pay</option>
+<option>Facility billing</option>
+<option>Broker (Modivcare/other)</option>
+</select>
+<input aria-label="Authorization or Reference Number" name="ref" placeholder="Authorization/Ref # (if any)" type="text"/>
+</div>
+<textarea aria-label="Notes" name="notes" placeholder="Notes (optional) — e.g., gate codes, special instructions"></textarea>
+<label style="display:flex;align-items:center;gap:8px">
+<input aria-label="Consent" required="" type="checkbox"/> I consent to be contacted about this request.
+            </label>
+<p class="hipaa" id="hipaa-note">We protect your information and follow HIPAA best practices. Do not include sensitive medical details.</p>
+</div>
+<div class="wizard-nav">
+<button class="btn secondary" id="prevBtn" type="button">Back</button>
+<button class="btn primary" id="nextBtn" type="button">Next</button>
+<button class="submit" hidden="" id="submitBtn" type="submit">Send Request</button>
+</div>
+</form>
+<div class="coverage-card" id="form-success" style="display:none;margin-top:12px;">
+<h3>Request received ✅</h3>
+<p>We’ll reach out shortly. If you chose “Call me back”, we’ll aim for your selected timeframe.</p>
+<p>For urgent needs, call <a href="tel:+1-555-123-4567">+1 (555) 123‑4567</a>.</p>
+</div>
+</div>
+<div>
+<h2 class="sr-only">Coverage Map</h2>
+<div aria-hidden="true" id="pickup-map"></div></div>
+</div></section>
+<!-- FAQ below the request form -->
+<section aria-labelledby="faq-title" class="section" id="faq">
+<div class="container">
+<h2 id="faq-title">Q&amp;A</h2>
+<div class="coverage-card">
+<details>
+<summary>Do you offer recurring standing orders?</summary>
+<p>Yes. We support weekly schedules for dialysis and facility appointments with proactive reminders.</p>
+</details>
+<details>
+<summary>What information do you need to book?</summary>
+<p>Pickup location, destination, date/time, service type, and a callback number.</p>
+</details>
+<details>
+<summary>Do you coordinate with facilities?</summary>
+<p>Absolutely. Our dispatch communicates ETAs and hand-offs with clinical teams to reduce wait times.</p>
+</details>
+<details>
+<summary>How do I arrange long-distance transport?</summary>
+<p>Submit a request with origin/destination and we’ll confirm crew availability and pricing.</p>
+</details></div>
+</div></section>
+<div class="cta-band">
+<div class="container wrap">
+<strong>Ready to schedule your next transport?</strong>
+<div>
+<a class="btn outline" href="#contact">Request Online</a>
+<a class="btn primary" href="tel:+1-555-123-4567">Call 24/7</a>
+</div>
+</div>
+</div>
+<footer role="contentinfo">
+<div class="container foot">
+<div>© <span id="year"></span> Unity Medical Transportation</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap">
+<a href="#top">Home</a>
+<a href="#services">Services</a>
+<a href="#contact">Contact</a>
+<a href="#">Privacy</a>
+<a href="#">HIPAA Notice</a>
+</div>
+<div class="social">
+<a aria-label="Facebook" href="#"></a>
+<a aria-label="Instagram" href="#"></a>
+<a aria-label="LinkedIn" href="#">in</a>
+</div>
+</div>
+</footer>
+<div aria-label="Quick actions" class="sticky-bar" role="region">
+<a class="call" href="tel:+1-555-123-4567">📞 Call</a>
+<a class="book" href="#contact">Book</a>
+</div>
+<script>
+    // Header compact on scroll
+    window.addEventListener('scroll', () => {
+      document.querySelector('header').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Auto year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Active nav on scroll
+    const sections = ['services','how','testimonials','coverage','contact','faq'];
+    const links = [...document.querySelectorAll('#site-nav a')];
+    const mapTargets = sections.map(id => document.getElementById(id));
+    const opt = {root:null, rootMargin:'-60% 0px -35% 0px', threshold:[0,1]};
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        const id = entry.target.id;
+        const link = links.find(a => a.getAttribute('href') === '#' + id);
+        if(link){ link.classList.toggle('active', entry.isIntersecting); }
+      });
+    }, opt);
+    mapTargets.forEach(el => el && obs.observe(el));
+
+    // Service filter
+    const segs = document.querySelectorAll('.seg');
+    const cards = document.querySelectorAll('#service-grid .card');
+    segs.forEach(s => {
+      s.addEventListener('click', () => {
+        segs.forEach(x => x.setAttribute('aria-selected', 'false'));
+        s.setAttribute('aria-selected', 'true');
+        const key = s.dataset.seg;
+        cards.forEach(c => {
+          const show = c.dataset.tags.includes(key);
+          c.style.display = show ? '' : 'none';
+        });
+      });
+    });
+
+    // Wizard
+    const form = document.getElementById('quote-form');
+    const steps = [...document.querySelectorAll('.wizard')];
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const successPanel = document.getElementById('form-success');
+    const bars = [document.getElementById('stepbar-1'), document.getElementById('stepbar-2'), document.getElementById('stepbar-3')];
+    let step = 1;
+    function renderStep(){
+      steps.forEach(s => s.hidden = Number(s.dataset.step) !== step);
+      bars.forEach((b,i) => b.classList.toggle('active', i < step));
+      prevBtn.disabled = step === 1;
+      nextBtn.hidden = step === steps.length;
+      submitBtn.hidden = step !== steps.length;
+    }
+    function validateStep(){
+      const current = steps.find(s => Number(s.dataset.step) === step);
+      const required = [...current.querySelectorAll('[required]')];
+      const invalid = required.filter(f => !f.value.trim());
+      if (invalid.length) {
+        invalid[0].focus();
+        alert('Please complete required fields.');
+        return false;
+      }
+      return true;
+    }
+    prevBtn.addEventListener('click', () => { if(step>1){ step--; renderStep(); } });
+    nextBtn.addEventListener('click', () => { if(validateStep()){ step++; renderStep(); } });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Fake success state (replace alert)
+      form.style.display = 'none';
+      successPanel.style.display = 'block';
+      // If callback timeframe chosen, show in success text
+      const cb = new FormData(form).get('callback_in');
+      if(cb){
+        successPanel.insertAdjacentHTML('beforeend', `<p>Requested callback: <strong>${cb}</strong>.</p>`);
+      }
+      // NOTE: replace form action with your real Formspree ID or backend endpoint
+    });
+    renderStep();
+
+    // Leaflet county map with pins
+    try{
+      const edison = [40.518, -74.412]; // Edison, NJ
+      const map = L.map('coverage-map', { zoomControl: true, scrollWheelZoom: false }).setView(edison, 9.5);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+
+      // Load NJ counties geojson (public data). If it fails, fallback to circles.
+      const primaryNames = new Set(['Essex','Hudson','Union','Bergen','Passaic','Morris','Middlesex','Somerset','Monmouth','Ocean','Hunterdon']);
+
+      fetch('https://cdn.jsdelivr.net/gh/codeforamerica/click_that_hood@main/public/data/new-jersey-counties.geojson')
+        .then(r => r.json())
+        .then(geo => {
+          L.geoJSON(geo, {
+            style: f => {
+              const name = (f.properties && (f.properties.name || f.properties.NAME)) || '';
+              const isPrimary = primaryNames.has(name);
+              return {
+                color: isPrimary ? '#003a8c' : '#00c853',
+                weight: 1.2,
+                fillColor: isPrimary ? '#003a8c' : '#00c853',
+                fillOpacity: isPrimary ? 0.20 : 0.10
+              };
+            },
+            onEachFeature: (feature, layer) => {
+              const name = (feature.properties && (feature.properties.name || feature.properties.NAME)) || 'County';
+              layer.bindPopup(`${name} County`);
+            }
+          }).addTo(map);
+        })
+        .catch(()=>{
+          // Fallback rings
+          L.circle(edison, {radius: 35000, color:'#003a8c', fillColor:'#003a8c', fillOpacity:.2}).addTo(map);
+          L.circle(edison, {radius: 70000, color:'#00c853', fillColor:'#00c853', fillOpacity:.1}).addTo(map);
+        });
+
+      // HQ + common pickup pins (examples; replace with your actual list)
+      const pins = [
+        {pos:[40.7357, -74.1724], label:'Newark — hospitals & dialysis'},   // Newark
+        {pos:[40.7282, -74.0776], label:'Jersey City — facilities'},         // Jersey City
+        {pos:[40.735,  -74.23],   label:'Union County — recurring routes'},  // Union
+        {pos:[40.558,  -74.299],  label:'Middlesex — dialysis centers'},     // Middlesex
+        {pos:[40.567,  -74.61],   label:'Somerset — rehab facilities'}       // Somerset
+      ];
+      pins.forEach(p => L.marker(p.pos).addTo(map).bindPopup(p.label));
+      L.marker(edison).addTo(map).bindPopup('Unity Medical Transportation — Edison, NJ (HQ)');
+    }catch(e){
+      console.error('Map init error', e);
+    }
+  
+    // Ensure pickup map renders
+    try{
+      const pickupEl = document.getElementById('pickup-map');
+      if (pickupEl && typeof L !== 'undefined'){
+        const center = [40.518, -74.412]; // Edison, NJ
+        const pmap = L.map(pickupEl, { zoomControl: true, scrollWheelZoom: false }).setView(center, 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 18,
+          attribution: '&copy; OpenStreetMap'
+        }).addTo(pmap);
+        L.marker(center).addTo(pmap).bindPopup('Unity Medical Transportation — Edison, NJ');
+      }
+    }catch(e){ console.error('Pickup map init error', e); }
+
+</script></body></html>
