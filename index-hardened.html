@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unity Medical Transportation</title>
+
+  <!-- CRITICAL: No <base> tag. Using only relative ./assets paths. -->
+
+  <style>
+    :root{
+      --brand-dark:#003a8c;
+      --brand-dark-2:#072f63;
+      --text:#0e1a2a;
+      --bg:#ffffff;
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100% !important;height:auto !important;display:block}
+    /* Avoid any global CSS elsewhere forcing fixed image dimensions */
+    [style*="height:" i]{height:auto !important}
+
+    /* Header */
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:linear-gradient(180deg,var(--brand-dark),var(--brand-dark-2));color:#fff}
+    .header-left{display:flex;align-items:center;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-logo{width:auto;height:48px}
+    .brand-name{font-weight:800;letter-spacing:.3px}
+
+    /* Hero as background (no distortion) */
+    .hero{background: url('./assets/ambulance-hero.jpg') center / cover no-repeat, 
+           linear-gradient(180deg, rgba(0,58,140,.45), rgba(0,58,140,.75));
+          min-height: 52vh; display:flex; align-items:flex-end}
+    .hero-inner{width:100%; padding:40px 16px 16px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.4)}
+    .hero h1{margin:0 0 6px;font-size:clamp(24px,5vw,44px)}
+    .hero p{margin:0;opacity:.95}
+
+    /* Contact status bar */
+    .contact-broadcast{
+      background: linear-gradient(180deg, rgba(0,58,140,0) 0%, rgba(0,58,140,.92) 18%, rgba(0,58,140,.95) 100%);
+      color:#fff; padding:8px 0; border:none;
+      margin-top:-1px; /* flush with hero */
+      margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); width:100vw;
+    }
+    .contact-broadcast .container{max-width:none;width:100%;padding:0 16px;margin:0 auto}
+    .cb-grid{display:grid;grid-template-columns:1fr;gap:10px}
+    .cb-card{display:flex;align-items:center;gap:8px;padding:6px 0}
+    .cb-ico{font-size:1rem}
+    .cb-label{font-weight:700;font-size:.85rem;opacity:.9;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+    .cb-value{font-weight:800;font-size:.95rem;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+    @media(min-width:960px){
+      .cb-grid{display:flex;gap:20px;justify-content:space-between;align-items:center}
+      .cb-card + .cb-card{position:relative}
+      .cb-card + .cb-card::before{
+        content:"";display:block;width:1px;height:18px;background:rgba(255,255,255,.25);margin-right:12px
+      }
+    }
+    /* Our Services (sample section to show it renders) */
+    .section{padding:28px 16px}
+    .section h2{margin:0 0 12px;font-size:clamp(20px,3.5vw,28px)}
+    .muted{opacity:.8}
+
+    /* Diagnostic banner (hidden unless errors) */
+    .diag{display:none;background:#b00020;color:#fff;padding:10px 16px;font-size:.95rem}
+    .diag ul{margin:6px 0 0 20px}
+  </style>
+</head>
+<body>
+
+  <div class="diag" id="diag"></div>
+
+  <header>
+    <div class="header-left brand">
+      <img src="./assets/logo.png" alt="Unity Medical Transportation" class="brand-logo">
+      <div class="brand-name">Unity Medical Transportation</div>
+    </div>
+    <nav>
+      <a href="#services" style="color:#fff;opacity:.95">Our Services</a>
+    </nav>
+  </header>
+
+  <section class="hero" aria-label="Hero">
+    <div class="hero-inner">
+      <h1>On‑time updates. Compassionate Care. New Jersey.</h1>
+      <p class="muted">Professional Non‑Emergency Medical Transportation</p>
+    </div>
+  </section>
+
+  <!-- Contact Status Bar -->
+  <section class="contact-broadcast" id="contact-info" aria-labelledby="contact-info-title">
+    <div class="container cb-grid">
+      <h2 id="contact-info-title" class="sr-only" style="position:absolute;left:-9999px">Contact Information</h2>
+
+      <a class="cb-card call-now" href="tel:+19085848336" aria-label="Call Unity Medical Transportation">
+        <div class="cb-ico">📞</div>
+        <div class="cb-label">Call Now</div>
+        <div class="cb-value">(908) 584-8336</div>
+      </a>
+
+      <div class="cb-card" role="group" aria-label="Fax number">
+        <div class="cb-ico">📠</div>
+        <div class="cb-label">Fax</div>
+        <div class="cb-value">(973) 925-6260</div>
+      </div>
+
+      <a class="cb-card" href="mailto:Contact@unitymt.com" aria-label="Email Unity Medical Transportation">
+        <div class="cb-ico">✉️</div>
+        <div class="cb-label">Email</div>
+        <div class="cb-value">Contact@unitymt.com</div>
+      </a>
+
+      <a class="cb-card" href="https://www.unitymt.com" target="_blank" rel="noopener" aria-label="Visit unitymt.com">
+        <div class="cb-ico">🌐</div>
+        <div class="cb-label">Website</div>
+        <div class="cb-value">unitymt.com</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <h2>Our Services</h2>
+    <p class="muted">Wheelchair transport, ambulatory transport, hospital/facility transfers, and more.</p>
+  </section>
+
+  <script>
+    // Diagnostics: show a banner listing any images that fail to load
+    (function(){
+      var missing = [];
+      function flag(url){ missing.push(url); }
+      // Monitor existing <img> elements
+      document.querySelectorAll('img').forEach(function(img){
+        if (!img.complete){
+          img.addEventListener('error', function(){ flag(img.src); });
+        } else if (img.naturalWidth === 0){
+          flag(img.src);
+        }
+      });
+      // Also test common background images (hero)
+      var hero = document.querySelector('.hero');
+      if (hero){
+        var bg = getComputedStyle(hero).backgroundImage;
+        var m = /url\(["']?([^"')]+)["']?\)/.exec(bg);
+        if (m && m[1]){
+          var test = new Image();
+          test.onerror = function(){ flag(m[1]); };
+          test.src = m[1];
+        }
+      }
+      // After a short delay, display any errors
+      setTimeout(function(){
+        if (missing.length){
+          var diag = document.getElementById('diag');
+          diag.style.display = 'block';
+          var html = "<strong>Missing images detected:</strong><ul>";
+          missing.forEach(function(u){ html += "<li>"+u+"</li>"; });
+          html += "</ul><div>Fix by uploading these files to <code>./assets/</code> with exact names & lowercase.</div>";
+          diag.innerHTML = html;
+        }
+      }, 800);
+    })();
+  </script>
+
+</body>
+</html>
